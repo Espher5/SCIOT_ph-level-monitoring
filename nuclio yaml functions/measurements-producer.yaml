@@ -1,0 +1,25 @@
+metadata:
+  name: measurements-producer
+  labels:
+    nuclio.io/project-name: dc585da9-3b04-404d-baa4-80d5c905a4ed
+spec:
+  handler: "main:handler"
+  runtime: nodejs
+  resources: {}
+  image: "nuclio/processor-measurements-producer:latest"
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPU: 75
+  build:
+    image: ""
+    noCache: false
+    offline: false
+    dependencies: []
+    runtimeAttributes:
+      repositories: []
+    functionSourceCode: Y29uc3QgbXF0dCA9IHJlcXVpcmUoJ21xdHQnKTsNCnZhciB1cmwgPSByZXF1aXJlKCd1cmwnKTsNCg0KdmFyIG1xdHRfdXJsID0gdXJsLnBhcnNlKCdtcXR0Oi8vZ3Vlc3Q6Z3Vlc3RAMTkyLjE2OC4yMzUuNTc6MTg4MycpOw0KdmFyIGF1dGggPSAobXF0dF91cmwuYXV0aCB8fCAnOicpLnNwbGl0KCc6Jyk7DQp2YXIgdXJsID0gJ21xdHQ6Ly8nICsgbXF0dF91cmwuaG9zdDsNCg0KdmFyIG9wdGlvbnMgPSB7DQogICAgcG9ydDogbXF0dF91cmwucG9ydCwNCiAgICBjbGllbnRJZDogJ21xdHRqc18nICsgTWF0aC5yYW5kb20oKS50b1N0cmluZygxNikuc3Vic3RyKDIsIDgpLA0KICAgIHVzZXJuYW1lOiBhdXRoWzBdLA0KICAgIHBhc3N3b3JkOiBhdXRoWzFdDQp9DQoNCmV4cG9ydHMuaGFuZGxlciA9IGZ1bmN0aW9uKGNvbnRleHQsIGV2ZW50KSB7DQogICAgdmFyIGNsaWVudCA9IG1xdHQuY29ubmVjdCh1cmwsIG9wdGlvbnMpOw0KICAgIHZhciBxdWV1ZSA9ICdpb3Qvc2Vuc29ycy9waCc7DQogICAgY2xpZW50Lm9uKCdjb25uZWN0JywgKCkgPT4gew0KICAgICAgICAvLyBJIGNvbnNpZGVyIDYgYXMgYSBiYXNlIHZhbHVlIGZvciB0aGUgcGggbGV2ZWwNCiAgICAgICAgdmFyIG1lc3NhZ2UgPSAoNiArIE1hdGgucmFuZG9tKCkgKiA1KS50b0ZpeGVkKDIpLnRvU3RyaW5nKCk7DQogICAgICAgIGNsaWVudC5wdWJsaXNoKHF1ZXVlLCBtZXNzYWdlLCAoKSA9PiB7DQogICAgICAgICAgICBjb25zb2xlLmxvZygnTWVzc2FnZSAiJXMiIHB1Ymxpc2hlZCBvbiBxdWV1ZSAiJXMiJywgbWVzc2FnZSwgcXVldWUpOw0KICAgICAgICB9KTsNCiAgICAgICAgY2xpZW50LmVuZCgpOw0KICAgICAgICBjb250ZXh0LmNhbGxiYWNrKCdNUVRUIE1lc3NhZ2UgU2VudCcpOw0KICAgIH0pOw0KfTs=
+    commands:
+      - 'npm install mqtt'
+    codeEntryType: sourceCode
+  platform: {}
+  readinessTimeoutSeconds: 60

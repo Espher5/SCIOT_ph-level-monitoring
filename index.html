@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SCIOT - Ph level monitoring</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Measurements logger</h1>
+        <div id="logArea">
+            <span id="noMeasurements">No measurements are currently available</span>
+            <button id="display-button" class="btn btn-primary">Display measurements</button>
+            <table id="measurements-table"></table>
+        </div>
+    </div>
+    <br><hr><br>
+    <div>
+        <h1>Aquarium control panel</h1>
+        <button id="activate-filters" class="btn btn-primary">Activate filters </button>
+        <button id="buy-filters" class="btn btn-primary">Buy new filters </button>
+        <div id="action-area"></div>
+    </div>
+
+    <script>
+        $('#display-button').click(function() {
+            $.ajax({
+                url: '/measurements',
+                type: 'POST',
+                dataType: 'JSON',
+                success: function(response, status, http) {
+                    if(response && response.length > 0) {
+                        highPhFlag = false;
+                        $('#noMeasurements').remove();
+                        $('#display-button').html('Refresh');               
+                        $('#measurement-header').remove();
+                        $('#measurements-table').children().remove();
+                        $('#ph-warning').remove();
+
+                        $('#measurements-table').prepend('<br><span id="measurement-header"><b>Here are the last ' + 
+                            response.length + 
+                            ' measurements received from the ph sensor:<b></span>');
+                        for(var i = 0; i < response.length; i++) {                          
+                            // Checks for dangerous ph levels
+                            if(response[i] >= 9) {
+                                highPhFlag = true;
+                                color = 'red';                               
+                            } else {
+                                color = 'black';
+                            }
+                            $('#measurements-table').append(
+                                '<tr><td>' + 
+                                    '<span class="measurement" style="color:' + color + ';">' + response[i] + '</span>' +
+                                '</td></tr>');                          
+                        }
+                        if(highPhFlag) {
+                            $('#logArea').append('<span id="ph-warning" style="color: red;"><b>Warning! High ph level detected!<b></span>');
+                        }
+                    }
+                }
+            });
+        });
+
+        $('#activate-filters').click(function() {
+            $('#action-result').remove();
+            $('#action-area').append('<span id="action-result">Filters activated successfully!</span>');
+        });
+
+        $('#buy-filters').click(function() {
+            $('#action-result').remove();
+            $('#action-area').append('<span id="action-result">A new set of filters has been ordered from Amazon</span>');
+        });
+    </script>
+</body>
+</html>
