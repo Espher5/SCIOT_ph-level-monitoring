@@ -17,7 +17,7 @@ The measurements produced by the system are currently generated randomly, since 
 ## Architecture
 The following image highlights the final system architecture.
 <p align="center">
-    <img src="" alt="architecture" />
+    <img src="architecture.png" alt="architecture" />
 </p>
 As we can see, the measurements can be generated in three different ways:
 - They could obviously be produced by an actual ph sensor.
