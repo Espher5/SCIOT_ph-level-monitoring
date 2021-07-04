@@ -30,7 +30,7 @@ This value can now be received by three different programs:
 
 The following image highlights the final system architecture.
 <p align="center">
-    <img src="" alt="architecture" />
+    <img src="architecture.png" alt="architecture" />
 </p>
 
 
