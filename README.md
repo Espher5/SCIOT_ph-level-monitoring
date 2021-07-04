@@ -1,1 +1,58 @@
-# SCIOT_ph-level-monitoring
+# SCIOT - Aquarium ph monitoring system
+
+## Summary
+[- Abstract](#Abstract): overview on the project's domain.\
+[- Architecture](#Architecture): system architecture definition.\
+[- Installation](#Installation): instructions to run the system from scratch.
+
+## Abstract
+This project was developed for the **"Serverless Computing for IoT"** course at the University of Salerno.
+The goal was to simulate a system that continuously monitors the ph level of an aquarium in a serverless fashion.
+Via a web app or a generic **MQTT** client, the user can access the logs of the measurements and based on these, can perform two actions:
+	-   If the ph level is too high, the filters can be manually activated.
+	-   Ordering a replacement for the filters.
+
+The measurements produced by the system are currently generated randomly, since no actual IoT hardware was employed.
+
+## Architecture
+The following image highlights the final system architecture.
+<p align="center">
+    <img src="" alt="architecture" />
+</p>
+As we can see, the measurements can be generated in three different ways:
+- They could obviously be produced by an actual ph sensor.
+- They can be manually generated from any MQTT client that publishes messages to the topic.
+- They can be randomly generated from a function, in this case a Nuclio serverless function (**measurement-producer**).
+
+As a baseline for the ph value, the number 6 was chosen; to this a random number is added. If the generated value is greater than 10, the user will be alerted in the web application.
+At this point, a first **RabbitMQ** queue collects the measurements on the **'iot/sensors/ph'** topic.
+Once a new measurement is received another Nuclio function, **measurement-consumer** is triggered. The value is processed and finally it is re-published on the **'iot/logs/ph'** topic.
+This value can now be received by three different programs:
+- Ant MQTT client subscribed to the logs topic.
+- A simple logger implemented in Nodejs that just informs the user of the message by printing it into the console.
+- An expressJS web app that informs the user of the dangerous ph level measurements and from where it is possible to take the aforementioned actions.
+
+## Installation
+The system was developed on **Ubuntu, version 20.04**.
+NodeJS is required to run the application.
+Use the following commands in two shell windows to start up Nuclio and RabbitMQ instances using Docker:
+- **Nuclio:**
+    ```sh
+    docker run -p 8070:8070 -v /var/run/docker.sock:/var/run/docker.sock -v /tmp:/tmp nuclio/dashboard:stable-amd64
+    ```
+- **RabbitMQ:**
+    ```sh
+    docker run -p 9000:15672  -p 1883:1883 -p 5672:5672  cyrilix/rabbitmq-mqtt
+    ```
+- **Install NodeJS dependencies**
+    - The two required dependencies in NodeJS are **'amqplib'** and **'express'**, as specified in the **'package.json'** config file.   
+    - In order to install them, from the project folder open a shell window and type 'npm i'.
+- **Change IP addresses:**
+    - In the and **'index.js'** and **'logger.js'** files
+    - In the two Nuclio functions and in the **measurement-consumer** trigger.
+- **Run the logger:**
+    - Use **'node logger.js'** to run the logger
+- **Run the web app:**
+    - Use **'node index.js'** to start the express web server.
+    - Go to **http://localhost:3000** to reach the aquarium control panel.
+    - From here you can use the interface to display the measurements or execute the actions.
